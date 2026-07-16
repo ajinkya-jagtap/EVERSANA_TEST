@@ -5,13 +5,21 @@ import axios from "axios";
 import RenderLargeList from "./components/RenderLargeList";
 import { zodResolver } from "@hookform/resolvers/zod";
 import z from "zod";
+import LoginComp from "./components/LoginComp";
 
-const UserSchema = z.object({
-  name: z.string().min(1, "Name is required"),
-  email: z.string().email("Invalid email address"),
-  password: z.string().min(6, "Password must be at least 6 characters"),
-  confirmPassword: z.string().optional(),
-});
+const UserSchema = z
+  .object({
+    name: z.string().min(1, "Name is required"),
+    email: z.string().email("Invalid email address"),
+    password: z.string().min(6, "Password must be at least 6 characters"),
+    confirmPassword: z
+      .string()
+      .min(1, { message: "Please confirm your password" }),
+  })
+  .refine((data) => data.password === data.confirmPassword, {
+    message: "Password and confirm password should match",
+    path: ["confirmPassword"],
+  });
 
 function App() {
   const {
@@ -48,11 +56,15 @@ function App() {
         config,
       );
       console.log("res", res);
-      alert("User Registered");
-      setValue("name", "");
-      setValue("email", "");
-      setValue("password", "");
-      setValue("confirmPassword", "");
+      if (res.status === 201) {
+        alert("User Registered");
+        setValue("name", "");
+        setValue("email", "");
+        setValue("password", "");
+        setValue("confirmPassword", "");
+      } else {
+        alert("Something went wrong");
+      }
     } catch (error) {
       console.log("err", error);
     }
@@ -66,6 +78,7 @@ function App() {
         submitForm={submitForm}
         errors={errors}
       />
+      <LoginComp />
       <RenderLargeList />
     </>
   );

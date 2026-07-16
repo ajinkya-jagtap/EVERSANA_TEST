@@ -1,4 +1,6 @@
-function SearchBar({ setSearchInput, searchInput }) {
+import React from "react";
+
+const SearchBar = React.memo(({ setSearchInput, searchInput }) => {
   return (
     <input
       placeholder="Search"
@@ -8,6 +10,6 @@ function SearchBar({ setSearchInput, searchInput }) {
       }}
     />
   );
-}
+});
 
 export default SearchBar;

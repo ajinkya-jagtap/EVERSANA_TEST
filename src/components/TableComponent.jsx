@@ -1,6 +1,8 @@
 // import { FixedSizeList as List } from "react-window";
 
-function TableComponent({ itemsList }) {
+import React from "react";
+
+const TableComponent = React.memo(({ itemsList }) => {
   return (
     <div>
       <table style={{ border: "1px solid grey", width: "100%" }}>
@@ -46,6 +48,6 @@ function TableComponent({ itemsList }) {
       </table>
     </div>
   );
-}
+});
 
 export default TableComponent;
