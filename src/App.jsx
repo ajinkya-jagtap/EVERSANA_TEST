@@ -3,50 +3,69 @@ import { useForm } from "react-hook-form";
 import RegistrationForm from "./components/RegistrationForm";
 import axios from "axios";
 import RenderLargeList from "./components/RenderLargeList";
-// import z from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+import z from "zod";
 
-// const UserSchema = z.object({
-//   name: z.string(),
-//   email: z.email(),
-//   password: z.password(),
-//   confirmPassword: z.confirmPassword(),
-// });
+const UserSchema = z.object({
+  name: z.string().min(1, "Name is required"),
+  email: z.string().email("Invalid email address"),
+  password: z.string().min(6, "Password must be at least 6 characters"),
+  confirmPassword: z.string().optional(),
+});
 
 function App() {
-  const form = useForm({
-    defaultValues: {
-      name: "Ajinkya",
-      email: "ajinkyaj897@gmail.com",
-      password: "12345678",
-      confirmPassword: "12345678",
-    },
+  const {
+    register,
+    handleSubmit,
+    getValues,
+    setValue,
+    formState: { errors },
+  } = useForm({
+    resolver: zodResolver(UserSchema),
   });
 
   const submitForm = async (data) => {
-    console.log("values", data, form.getValues());
+    console.log("values", data, getValues());
 
-    // const payload = {
-    //   name: data.name,
-    //   email: data.email,
-    //   password: data.password,
-    //   confirmPassword: data.confirmPassword,
-    // };
+    try {
+      const payload = {
+        name: data.name,
+        email: data.email,
+        password: data.password,
+        confirmPassword: data.confirmPassword,
+      };
 
-    const payload = {
-      name: form.getValues().name,
-      email: form.getValues().email,
-      password: form.getValues().password,
-      confirmPassword: form.getValues().confirmPassword,
-    };
+      const config = {
+        headers: {
+          "Content-Type": "application/json",
+          "x-api-key": "free_user_3GaOTtm5uqF4UFM6krdzJ715jo9",
+        },
+      };
 
-    const res = await axios.post("https://reqres.in/api/users", payload);
-    console.log("res", res);
-    alert("User Registered");
+      const res = await axios.post(
+        "https://reqres.in/api/users",
+        payload,
+        config,
+      );
+      console.log("res", res);
+      alert("User Registered");
+      setValue("name", "");
+      setValue("email", "");
+      setValue("password", "");
+      setValue("confirmPassword", "");
+    } catch (error) {
+      console.log("err", error);
+    }
   };
 
   return (
     <>
-      <RegistrationForm form={form} submitForm={submitForm} />
+      <RegistrationForm
+        register={register}
+        handleSubmit={handleSubmit}
+        submitForm={submitForm}
+        errors={errors}
+      />
       <RenderLargeList />
     </>
   );

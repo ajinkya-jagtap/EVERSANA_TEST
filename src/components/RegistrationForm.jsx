@@ -1,52 +1,67 @@
-import { FormProvider } from "react-hook-form";
-
-function RegistrationForm({ form, submitForm }) {
-  console.log("form", form, form.formState);
+function RegistrationForm({ register, handleSubmit, submitForm, errors }) {
+  console.log("err", errors);
   return (
-    <FormProvider {...form}>
-      <div
-        style={{ display: "flex", flexDirection: "column", padding: "50px" }}
-        // onSubmit={form.handleSubmit(submitForm)}
-      >
-        <div>
-          <input
-            placeholder="name"
-            {...form.register("name")}
-            style={{ margin: "10px", width: "50%" }}
-          />
-          {form.formState.errors.name && <h3>{form.formState.errors.name}</h3>}
-        </div>
-        <div>
-          <input
-            placeholder="email"
-            {...form.register("email")}
-            type="email"
-            style={{ margin: "10px", width: "50%" }}
-          />
-        </div>
-        <div>
-          <input
-            placeholder="password"
-            style={{ margin: "10px", width: "50%" }}
-            type="password"
-            {...form.register("password")}
-          />
-        </div>
-        <div>
-          <input
-            placeholder="confirm password"
-            style={{ margin: "10px", width: "50%" }}
-            type="password"
-            {...form.register("confirmPassword")}
-          />
-        </div>
-        <div>
-          <button type="button" onClick={submitForm} style={{ width: "30%" }}>
-            Submit
-          </button>
-        </div>
+    <form
+      style={{ display: "flex", flexDirection: "column", padding: "50px" }}
+      onSubmit={handleSubmit(submitForm)}
+    >
+      <div>
+        <input
+          placeholder="name"
+          {...register("name")}
+          style={{ margin: "10px", width: "50%" }}
+        />
+        {errors.name && (
+          <p style={{ color: "red", fontSize: "12px" }}>
+            {errors.name.message}
+          </p>
+        )}
       </div>
-    </FormProvider>
+      <div>
+        <input
+          placeholder="email"
+          {...register("email")}
+          type="email"
+          style={{ margin: "10px", width: "50%" }}
+        />
+        {errors.email && (
+          <p style={{ color: "red", fontSize: "12px" }}>
+            {errors.email.message}
+          </p>
+        )}
+      </div>
+      <div>
+        <input
+          placeholder="password"
+          style={{ margin: "10px", width: "50%" }}
+          type="password"
+          {...register("password")}
+        />
+        {errors.password && (
+          <p style={{ color: "red", fontSize: "12px" }}>
+            {errors.password.message}
+          </p>
+        )}
+      </div>
+      <div>
+        <input
+          placeholder="confirm password"
+          style={{ margin: "10px", width: "50%" }}
+          type="password"
+          {...register("confirmPassword")}
+        />
+        {errors.confirmPassword && (
+          <p style={{ color: "red", fontSize: "12px" }}>
+            {errors.confirmPassword.message}
+          </p>
+        )}
+      </div>
+      <div>
+        <button type="submit" style={{ width: "30%" }}>
+          Submit
+        </button>
+      </div>
+    </form>
   );
 }
 
